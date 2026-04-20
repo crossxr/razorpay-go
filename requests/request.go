@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -155,7 +154,7 @@ func (request *Request) setAuthentication(req *http.Request) {
 
 func processResponse(response *http.Response) (map[string]interface{}, error) {
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 
 	if len(body) == 0 || len(body) == 2 {
 		resp := make(map[string]interface{})

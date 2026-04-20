@@ -6,9 +6,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -47,7 +47,7 @@ func testSetup() func() {
 
 func getFixture(path string) string {
 	filepath := path + ".json"
-	b, err := ioutil.ReadFile("../testdata/" + filepath)
+	b, err := os.ReadFile("../testdata/" + filepath)
 	if err != nil {
 		panic(err)
 	}
