@@ -130,9 +130,14 @@ func VerifyPaymentLinkSignature(queryParams map[string]interface{}, webhookSigna
 func VerifySignature(body []byte, signature string, key string) bool {
 	h := hmac.New(sha256.New, []byte(key))
 	h.Write(body)
-	expectedSignature := hex.EncodeToString(h.Sum(nil))
-	if expectedSignature != signature {
+	expectedSignature := h.Sum(nil)
+
+	// Decode the provided signature from hex
+	signatureBytes, err := hex.DecodeString(signature)
+	if err != nil {
 		return false
 	}
-	return true
+
+	// Use constant-time comparison to prevent timing attacks
+	return hmac.Equal(expectedSignature, signatureBytes)
 }
