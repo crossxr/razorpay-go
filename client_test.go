@@ -2,6 +2,7 @@ package razorpay
 
 import (
 	"testing"
+	"time"
 
 	"github.com/razorpay/razorpay-go/requests"
 	"github.com/stretchr/testify/assert"
@@ -22,23 +23,32 @@ func TestNewClient(t *testing.T) {
 func TestNewClient_ResourcesInitialized(t *testing.T) {
 	client := NewClient("rzp_test_key", "test_secret")
 
-	// Verify all resources are initialized
-	assert.NotNil(t, client.Order, "Order resource should be initialized")
-	assert.NotNil(t, client.Payment, "Payment resource should be initialized")
-	assert.NotNil(t, client.Refund, "Refund resource should be initialized")
+	// Verify all 25 resources are initialized
+	assert.NotNil(t, client.Addon, "Addon resource should be initialized")
+	assert.NotNil(t, client.Account, "Account resource should be initialized")
+	assert.NotNil(t, client.Card, "Card resource should be initialized")
 	assert.NotNil(t, client.Customer, "Customer resource should be initialized")
 	assert.NotNil(t, client.Invoice, "Invoice resource should be initialized")
-	assert.NotNil(t, client.Subscription, "Subscription resource should be initialized")
+	assert.NotNil(t, client.PaymentLink, "PaymentLink resource should be initialized")
+	assert.NotNil(t, client.Order, "Order resource should be initialized")
+	assert.NotNil(t, client.Payment, "Payment resource should be initialized")
 	assert.NotNil(t, client.Plan, "Plan resource should be initialized")
+	assert.NotNil(t, client.Product, "Product resource should be initialized")
+	assert.NotNil(t, client.Refund, "Refund resource should be initialized")
+	assert.NotNil(t, client.Subscription, "Subscription resource should be initialized")
+	assert.NotNil(t, client.Token, "Token resource should be initialized")
 	assert.NotNil(t, client.Transfer, "Transfer resource should be initialized")
 	assert.NotNil(t, client.VirtualAccount, "VirtualAccount resource should be initialized")
 	assert.NotNil(t, client.QrCode, "QrCode resource should be initialized")
 	assert.NotNil(t, client.FundAccount, "FundAccount resource should be initialized")
 	assert.NotNil(t, client.Settlement, "Settlement resource should be initialized")
+	assert.NotNil(t, client.Stakeholder, "Stakeholder resource should be initialized")
 	assert.NotNil(t, client.Item, "Item resource should be initialized")
+	assert.NotNil(t, client.Iin, "Iin resource should be initialized")
 	assert.NotNil(t, client.Webhook, "Webhook resource should be initialized")
 	assert.NotNil(t, client.Document, "Document resource should be initialized")
 	assert.NotNil(t, client.Dispute, "Dispute resource should be initialized")
+	assert.NotNil(t, client.Payout, "Payout resource should be initialized")
 }
 
 func TestNewClientOAuth(t *testing.T) {
@@ -91,6 +101,7 @@ func TestSetTimeout(t *testing.T) {
 	client.SetTimeout(30)
 
 	assert.NotNil(t, client.Request.HTTPClient, "HTTPClient should be set after SetTimeout")
+	assert.Equal(t, 30*time.Second, client.Request.HTTPClient.Timeout, "Timeout should be set to 30 seconds")
 }
 
 func TestSetUserAgent(t *testing.T) {

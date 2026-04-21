@@ -65,6 +65,16 @@ func TestVerifyWebhookSignature_InvalidSignature(t *testing.T) {
 	assert.Equal(t, false, result, "Invalid signature should be rejected")
 }
 
+func TestVerifyWebhookSignature_WrongButValidHex(t *testing.T) {
+	webhookBody := `{"entity":"event","event":"payment.authorized"}`
+	// Valid hex string but wrong signature value
+	wrongButValidHex := "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899"
+	secret := "test_secret_123"
+
+	result := utils.VerifyWebhookSignature(webhookBody, wrongButValidHex, secret)
+	assert.Equal(t, false, result, "Wrong but valid hex signature should be rejected")
+}
+
 func TestVerifyWebhookSignature_TamperedSignature(t *testing.T) {
 	webhookBody := `{"entity":"event","account_id":"acc_HVFD0PFnHPAzKj","event":"payment.authorized"}`
 	// Valid signature but with last 2 characters changed
