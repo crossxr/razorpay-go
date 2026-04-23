@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-04-23
+
+### Changed
+- Upgraded Go version from 1.14 to 1.26
+- Updated dependencies (testify v1.5.1 → v1.11.1)
+- Migrated from deprecated `ioutil` to `io` package
+
+### Security
+- Fixed timing attack vulnerability in signature verification using `hmac.Equal()` for constant-time comparison
+
+### Added
+- OAuth token support
+- Unit tests for client initialization and configuration
+- Unit tests for error handling across resources
+- Unit tests for signature verification edge cases
+
+### Fixed
+- Boolean corrections in documentation
+
+## [1.4.0] - 2025-06-15
+
+### Changed
+- Removed global request variable for better concurrency support
+
+### Fixed
+- Initialise headers for request
+
 ## [1.3.4] - 2025-05-07
 
 ### Added
