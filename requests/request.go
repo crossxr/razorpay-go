@@ -196,12 +196,9 @@ func (request *Request) doRequestResponse(req *http.Request) (map[string]interfa
 		return nil, &errors.ServerError{Message: errorData.Description}
 	case constants.GATEWAY_ERROR:
 		return nil, &errors.GatewayError{Message: errorData.Description}
-	case constants.BAD_REQUEST_ERROR:
 	default:
 		return nil, &errors.BadRequestError{Message: errorData.Description}
 	}
-
-	return processResponse(response)
 }
 
 // Get ...

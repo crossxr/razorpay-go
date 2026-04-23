@@ -54,3 +54,90 @@ func TestVerifyPaymentLinkSignature(t *testing.T) {
     assert.Equal(t, body, true)
 }
 
+// Tests for invalid/edge case signatures
+
+func TestVerifyWebhookSignature_InvalidSignature(t *testing.T) {
+	webhookBody := `{"entity":"event","event":"payment.authorized"}`
+	invalidSignature := "completely_wrong_signature_that_is_not_valid"
+	secret := "test_secret_123"
+
+	result := utils.VerifyWebhookSignature(webhookBody, invalidSignature, secret)
+	assert.Equal(t, false, result, "Invalid signature should be rejected")
+}
+
+func TestVerifyWebhookSignature_WrongButValidHex(t *testing.T) {
+	webhookBody := `{"entity":"event","event":"payment.authorized"}`
+	// Valid hex string but wrong signature value
+	wrongButValidHex := "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899"
+	secret := "test_secret_123"
+
+	result := utils.VerifyWebhookSignature(webhookBody, wrongButValidHex, secret)
+	assert.Equal(t, false, result, "Wrong but valid hex signature should be rejected")
+}
+
+func TestVerifyWebhookSignature_TamperedSignature(t *testing.T) {
+	webhookBody := `{"entity":"event","account_id":"acc_HVFD0PFnHPAzKj","event":"payment.authorized"}`
+	// Valid signature but with last 2 characters changed
+	tamperedSignature := "ea962f3a2a8090aa14ef10fc178306edcb46ee7ccadae8afe2275cda26f3d200"
+	secret := "123456"
+
+	result := utils.VerifyWebhookSignature(webhookBody, tamperedSignature, secret)
+	assert.Equal(t, false, result, "Tampered signature should be rejected")
+}
+
+func TestVerifyWebhookSignature_EmptySecret(t *testing.T) {
+	webhookBody := `{"entity":"event","event":"payment.authorized"}`
+	signature := "some_signature"
+	emptySecret := ""
+
+	result := utils.VerifyWebhookSignature(webhookBody, signature, emptySecret)
+	assert.Equal(t, false, result, "Empty secret should not validate random signature")
+}
+
+func TestVerifyWebhookSignature_EmptyBody(t *testing.T) {
+	emptyBody := ""
+	signature := "invalid_sig"
+	secret := "test_secret"
+
+	result := utils.VerifyWebhookSignature(emptyBody, signature, secret)
+	assert.Equal(t, false, result, "Empty body with invalid signature should be rejected")
+}
+
+func TestVerifyPaymentSignature_InvalidSignature(t *testing.T) {
+	params := map[string]interface{}{
+		"razorpay_order_id":   "order_test123",
+		"razorpay_payment_id": "pay_test456",
+	}
+	invalidSignature := "invalid_signature_here"
+	secret := "test_secret"
+
+	result := utils.VerifyPaymentSignature(params, invalidSignature, secret)
+	assert.Equal(t, false, result, "Invalid payment signature should be rejected")
+}
+
+func TestVerifySubscriptionSignature_InvalidSignature(t *testing.T) {
+	params := map[string]interface{}{
+		"razorpay_subscription_id": "sub_test123",
+		"razorpay_payment_id":      "pay_test456",
+	}
+	invalidSignature := "invalid_signature_here"
+	secret := "test_secret"
+
+	result := utils.VerifySubscriptionSignature(params, invalidSignature, secret)
+	assert.Equal(t, false, result, "Invalid subscription signature should be rejected")
+}
+
+func TestVerifyPaymentLinkSignature_InvalidSignature(t *testing.T) {
+	params := map[string]interface{}{
+		"payment_link_id":            "plink_test123",
+		"razorpay_payment_id":        "pay_test456",
+		"payment_link_reference_id":  "ref_test789",
+		"payment_link_status":        "paid",
+	}
+	invalidSignature := "invalid_signature_here"
+	secret := "test_secret"
+
+	result := utils.VerifyPaymentLinkSignature(params, invalidSignature, secret)
+	assert.Equal(t, false, result, "Invalid payment link signature should be rejected")
+}
+

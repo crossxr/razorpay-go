@@ -289,3 +289,66 @@ func TestAuthStruct(t *testing.T) {
 		t.Errorf("Expected Token to be 'test_token', got %s", auth.Token)
 	}
 }
+
+func TestAddHeaders(t *testing.T) {
+	request := &Request{
+		Headers: make(map[string]string),
+	}
+
+	headers := map[string]string{
+		"X-Custom-Header": "custom-value",
+		"X-Another":       "another-value",
+	}
+	request.AddHeaders(headers)
+
+	if request.Headers["X-Custom-Header"] != "custom-value" {
+		t.Errorf("Expected X-Custom-Header to be 'custom-value', got %s", request.Headers["X-Custom-Header"])
+	}
+	if request.Headers["X-Another"] != "another-value" {
+		t.Errorf("Expected X-Another to be 'another-value', got %s", request.Headers["X-Another"])
+	}
+}
+
+func TestAddHeaders_Overwrite(t *testing.T) {
+	request := &Request{
+		Headers: map[string]string{
+			"X-Existing": "old-value",
+		},
+	}
+
+	request.AddHeaders(map[string]string{
+		"X-Existing": "new-value",
+	})
+
+	if request.Headers["X-Existing"] != "new-value" {
+		t.Errorf("Expected X-Existing to be overwritten to 'new-value', got %s", request.Headers["X-Existing"])
+	}
+}
+
+func TestSetTimeout(t *testing.T) {
+	request := &Request{}
+
+	request.SetTimeout(30)
+
+	if request.HTTPClient == nil {
+		t.Error("Expected HTTPClient to be set after SetTimeout")
+	}
+}
+
+func TestSetUserAgent(t *testing.T) {
+	request := &Request{}
+
+	request.SetUserAgent("TestApp/1.0")
+
+	if request.GetUserAgent() != "TestApp/1.0" {
+		t.Errorf("Expected user agent to be 'TestApp/1.0', got %s", request.GetUserAgent())
+	}
+}
+
+func TestGetUserAgent_Empty(t *testing.T) {
+	request := &Request{}
+
+	if request.GetUserAgent() != "" {
+		t.Errorf("Expected empty user agent, got %s", request.GetUserAgent())
+	}
+}
