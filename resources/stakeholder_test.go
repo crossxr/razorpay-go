@@ -3,7 +3,7 @@ package resources_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 
@@ -30,7 +30,7 @@ func TestStakeholderCreate(t *testing.T) {
 
 	teardown, fixture := utils.StartMockServer(url, "fake_stakeholder")
 	defer teardown()
-	b, err := ioutil.ReadFile("../testdata/stakeholder_data.json")
+	b, err := os.ReadFile("../testdata/stakeholder_data.json")
 	if err != nil {
 		panic(err)
 	}

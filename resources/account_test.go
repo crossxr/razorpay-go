@@ -3,7 +3,7 @@ package resources_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 
@@ -28,7 +28,7 @@ func TestAccountCreate(t *testing.T) {
 	url := "/v2" + constants.ACCOUNT_URL
 	teardown, fixture := utils.StartMockServer(url, "fake_account")
 	defer teardown()
-	b, err := ioutil.ReadFile("../testdata/fake_account_request.json")
+	b, err := os.ReadFile("../testdata/fake_account_request.json")
 	if err != nil {
 		panic(err)
 	}
